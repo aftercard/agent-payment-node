@@ -60,7 +60,10 @@ Verify a downloaded artifact with the GitHub CLI:
 
 ```sh
 gh attestation verify aftercard-apn-<version>.tgz \
-  --repo aftercard/agent-payment-node
+  --repo aftercard/agent-payment-node \
+  --signer-workflow aftercard/agent-payment-node/.github/workflows/release.yml \
+  --source-ref refs/heads/main \
+  --deny-self-hosted-runners
 ```
 
 Before a Homebrew update, verify the tarball, SBOM and manifest locally and pass
