@@ -48,6 +48,41 @@ doctor, wallet, provider-permission and wallet-policy operations plus x402 inspe
 direct-transfer prepare/foreground handoff, operation status/resume and receipt
 reads. It has no remote listener, remote transport or arbitrary sign/send tool.
 
+## Supply-chain verification
+
+Candidate and release artifacts are built twice with Node 24.15.0 and must be
+byte-identical. The workflow emits the npm tarball, a deterministic SPDX 2.3
+SBOM derived from the production lock graph, and a release manifest binding
+their names, sizes and SHA-256 digests to the exact repository commit. GitHub
+artifact attestations bind those bytes to the pinned workflow identity.
+
+Verify a downloaded artifact with the GitHub CLI:
+
+```sh
+gh attestation verify aftercard-apn-<version>.tgz \
+  --repo aftercard/agent-payment-node \
+  --signer-workflow aftercard/agent-payment-node/.github/workflows/release.yml \
+  --source-ref refs/heads/main \
+  --deny-self-hosted-runners
+```
+
+Before a Homebrew update, verify the tarball, SBOM and manifest locally and pass
+the proposed Formula as `--formula`; the verifier rejects mutable URLs, version
+drift and any digest not present in the manifest:
+
+```sh
+node scripts/verify-supply-chain.mjs verify \
+  --artifact aftercard-apn-<version>.tgz \
+  --sbom aftercard-apn-<version>.spdx.json \
+  --manifest aftercard-apn-<version>.release.json \
+  --formula Formula/apn.rb
+```
+
+Public releases are created only by the manually dispatched, least-privilege
+release workflow from an existing protected `vX.Y.Z` tag and an independently
+supplied full commit SHA. Publication and Homebrew changes remain separate
+owner actions.
+
 ## First journey
 
 ```sh
