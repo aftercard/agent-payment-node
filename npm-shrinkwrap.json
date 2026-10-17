@@ -1,12 +1,12 @@
 {
   "name": "@aftercard/apn",
-  "version": "0.5.46",
+  "version": "0.5.47",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "@aftercard/apn",
-      "version": "0.5.46",
+      "version": "0.5.47",
       "cpu": [
         "arm64"
       ],
